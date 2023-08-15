@@ -1,35 +1,18 @@
 import 'dart:isolate';
 
+import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:onetouchtimer/presentation/intro/intro_screen.dart';
+import 'package:onetouchtimer/core/alarm/alarm.dart';
+import 'package:onetouchtimer/presentation/diet/diet_controller.dart';
 import 'package:onetouchtimer/presentation/main/main_screen.dart';
-import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
-
 import 'presentation/main/main_controller.dart';
-import 'presentation/main/second_screen.dart';
-
-// Be sure to annotate your callback function to avoid issues in release mode on Flutter >= 3.3.0
-@pragma('vm:entry-point')
-void printHello() {
-  final DateTime now = DateTime.now();
-  final int isolateId = Isolate.current.hashCode;
-  print("[$now] Hello, world! isolate=$isolateId function='$printHello'");
-}
 
 void main() async {
-  // Very important to call before initialize since it
-  // ensures the binding is available and ready before
-  // any native call
   WidgetsFlutterBinding.ensureInitialized();
-
   await AndroidAlarmManager.initialize();
 
   runApp(const MyApp());
-
-  const int helloAlarmID = 0;
-  await AndroidAlarmManager.periodic(
-      const Duration(minutes: 1), helloAlarmID, printHello);
 }
 
 class MyApp extends StatelessWidget {
@@ -38,14 +21,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Get.put(MainController());
+    Get.put(DietController());
     return GetMaterialApp(
+        debugShowCheckedModeBanner: false,
         theme: ThemeData(
           //fontFamily 지정
           primaryColor: Colors.white,
-
           fontFamily: 'NotoSansKR',
         ),
-        home: MainScreen());
+        home: const MainScreen());
     //       FutureBuilder(
     //         future: Future.delayed(
     //             const Duration(seconds: 3), () => "Intro Completed."),

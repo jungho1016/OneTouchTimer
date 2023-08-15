@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -6,8 +8,12 @@ import 'package:onetouchtimer/presentation/main/second_screen.dart';
 import 'package:timezone/standalone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
+import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 
 class NotifyHelper {
+  static final StreamController<String> _streamController =
+      StreamController<String>();
+
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
@@ -22,6 +28,7 @@ class NotifyHelper {
 
     await flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
+      onDidReceiveNotificationResponse: onDidReceiveNotificationResponse,
     );
   }
 
@@ -29,10 +36,9 @@ class NotifyHelper {
       {required String title,
       required String body,
       required String payload}) async {
-    print("doing test");
     print("Displaying notification: $title - $body");
     var androidPlatformChannelSpecifics = const AndroidNotificationDetails(
-        'your channel id', 'your channel name',
+        'your channel id', 'alarm channel',
         channelDescription: 'test',
         importance: Importance.max,
         priority: Priority.high,
@@ -42,25 +48,24 @@ class NotifyHelper {
     );
     await flutterLocalNotificationsPlugin.show(
       0,
-      '원터치 알람',
-      '알람이 완료 되었습니다',
+      title,
+      body,
       platformChannelSpecifics,
-      payload: 'It could be anything you pass',
+      payload: payload,
     );
   }
 
-  void scheduledNotification() async {
+  void scheduleNotification() async {
     tz.initializeTimeZones();
     final korea = tz.getLocation('Asia/Seoul');
 
-    final scheduledTime = tz.TZDateTime.now(korea);
-    print(
-        "Scheduled time for notification: $scheduledTime"); // 예약된 알림 시간을 출력합니다
+    final scheduledTime =
+        tz.TZDateTime.now(korea).add(const Duration(seconds: 10));
 
     await flutterLocalNotificationsPlugin.zonedSchedule(
       0,
-      'scheduled title',
-      'theme changes 5 seconds ago',
+      'Scheduled Title',
+      'This is a scheduled notification',
       scheduledTime,
       const NotificationDetails(
         android: AndroidNotificationDetails(
@@ -87,7 +92,6 @@ class NotifyHelper {
 
   Future onDidReceiveLocalNotification(
       int id, String? title, String? body, String? payload) async {
-    // display a dialog with the notification details, tap ok to go to another page
     showDialog(
       context: Get.context!,
       builder: (BuildContext context) => CupertinoAlertDialog(
@@ -112,5 +116,29 @@ class NotifyHelper {
         ],
       ),
     );
+  }
+
+  void onDidReceiveNotificationResponse(
+      NotificationResponse notificationResponse) async {
+    //! Payload(전송 데이터)를 Stream에 추가합니다.
+    final String payload = notificationResponse.payload ?? "";
+    if (notificationResponse.payload != null ||
+        notificationResponse.payload!.isNotEmpty) {
+      print('FOREGROUND PAYLOAD: $payload');
+      _streamController.add(payload);
+    }
+  }
+
+  //! Background 상태(앱이 닫힌 상태에서 받은 경우)
+  void onBackgroundNotificationResponse() async {
+    final NotificationAppLaunchDetails? notificationAppLaunchDetails =
+        await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
+    //! 앱이 Notification을 통해서 열린 경우라면 Payload(전송 데이터)를 Stream에 추가합니다.
+    if (notificationAppLaunchDetails?.didNotificationLaunchApp ?? false) {
+      String payload =
+          notificationAppLaunchDetails!.notificationResponse?.payload ?? "";
+      print("BACKGROUND PAYLOAD: $payload");
+      _streamController.add(payload);
+    }
   }
 }

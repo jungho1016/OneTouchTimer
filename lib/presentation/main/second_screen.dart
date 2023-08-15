@@ -17,7 +17,7 @@ class _SecondScreenState extends State<SecondScreen> {
   void initState() {
     NotifyHelper notifyHelper = NotifyHelper();
     notifyHelper.initializeNotification();
-    notifyHelper.scheduledNotification();
+    notifyHelper.scheduleNotification();
     super.initState();
   }
 

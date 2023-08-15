@@ -1,70 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:onetouchtimer/core/component/circle_component.dart';
 import 'package:onetouchtimer/core/component/elevatedbutton_component.dart';
 import 'package:onetouchtimer/core/component/text_component.dart';
-import 'dart:async';
 
-class Main2Screen extends StatefulWidget {
+import 'package:onetouchtimer/presentation/diet/diet_controller.dart';
+
+class DietScreen extends GetView<DietController> {
   final int dietTimeInSeconds;
 
-  const Main2Screen({Key? key, required this.dietTimeInSeconds})
-      : super(key: key);
-
-  @override
-  _Main2ScreenState createState() => _Main2ScreenState();
-}
-
-class _Main2ScreenState extends State<Main2Screen> {
-  int dietTimeInSeconds = 0;
-  Timer? _timer;
-  bool isTimerPaused = false;
-
-  void startTimer(int seconds) {
-    if (_timer != null) {
-      _timer!.cancel();
-    }
-    setState(() {
-      dietTimeInSeconds = seconds;
-      isTimerPaused = false;
-    });
-
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (!isTimerPaused && dietTimeInSeconds > 0) {
-        setState(() {
-          dietTimeInSeconds--;
-        });
-      } else if (dietTimeInSeconds <= 0) {
-        timer.cancel();
-        Navigator.pop(context); // 메인 화면으로 돌아감
-      }
-    });
-  }
-
-  void pauseOrResumeTimer() {
-    setState(() {
-      isTimerPaused = !isTimerPaused;
-      if (!isTimerPaused) {
-        startTimer(dietTimeInSeconds);
-      } else {
-        _timer?.cancel();
-      }
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    startTimer(widget.dietTimeInSeconds);
-  }
-
-  @override
-  void dispose() {
-    _timer?.cancel();
-    super.dispose();
-  }
+  const DietScreen({required this.dietTimeInSeconds});
 
   @override
   Widget build(BuildContext context) {
+    controller.startTimer(dietTimeInSeconds);
     return Scaffold(
       backgroundColor: const Color(0xFFFF2E63),
       body: SingleChildScrollView(
@@ -111,10 +60,17 @@ class _Main2ScreenState extends State<Main2Screen> {
               const SizedBox(
                 height: 24,
               ),
-              TextComponent(
-                text:
-                    '${(dietTimeInSeconds ~/ 3600).toString().padLeft(2, '0')}:${((dietTimeInSeconds % 3600) ~/ 60).toString().padLeft(2, '0')}:${(dietTimeInSeconds % 60).toString().padLeft(2, '0')}',
-                fontSize: 80,
+              GetBuilder<DietController>(
+                builder: (controller) {
+                  final hours = controller.dietTimeInSeconds ~/ 3600;
+                  final minutes = (controller.dietTimeInSeconds % 3600) ~/ 60;
+                  final seconds = controller.dietTimeInSeconds % 60;
+                  return TextComponent(
+                    text:
+                        '$hours:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}',
+                    fontSize: 80,
+                  );
+                },
               ),
               const SizedBox(
                 height: 48,
@@ -127,12 +83,12 @@ class _Main2ScreenState extends State<Main2Screen> {
                 height: 48,
               ),
               InkWell(
-                onTap: pauseOrResumeTimer,
+                onTap: controller.pauseOrResumeTimer,
                 child: const CirCleComponent(
                   insideColor: Color.fromRGBO(8, 217, 214, 1),
                   outsideColor: Color.fromRGBO(234, 234, 234, 1),
                 ),
-              )
+              ),
             ],
           ),
         ),

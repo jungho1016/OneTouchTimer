@@ -3,11 +3,28 @@ import 'package:get/get.dart';
 import 'package:onetouchtimer/core/component/circle_component.dart';
 import 'package:onetouchtimer/core/component/elevatedbutton_component.dart';
 import 'package:onetouchtimer/core/component/text_component.dart';
-import 'package:onetouchtimer/presentation/main/main2_screen.dart';
 import 'package:onetouchtimer/presentation/main/main_controller.dart';
 
-class MainScreen extends GetView<MainController> {
+class MainScreen extends GetView<MainController> with WidgetsBindingObserver {
   const MainScreen({super.key});
+
+  void onInit() {
+    WidgetsBinding.instance?.addObserver(this);
+    controller.restoreSavedData();
+  }
+
+  void onClose() {
+    WidgetsBinding.instance?.removeObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused) {
+      // Handle app going to the background
+    } else if (state == AppLifecycleState.resumed) {
+      // Handle app coming back to the foreground
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,21 +40,21 @@ class MainScreen extends GetView<MainController> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ElevatedButtonComponet(
-                    onPressed: () => controller.startTimer(12),
+                    onPressed: () => controller.startTimer(12, 12),
                     difficulty: 'Easy',
                     eatTime: 12,
                     dietTime: 12,
                     color: const Color.fromRGBO(37, 42, 52, 1),
                   ),
                   ElevatedButtonComponet(
-                    onPressed: () => controller.startTimer(8),
+                    onPressed: () => controller.startTimer(8, 16),
                     difficulty: 'Normal',
                     eatTime: 8,
                     dietTime: 16,
                     color: const Color.fromRGBO(37, 42, 52, 1),
                   ),
                   ElevatedButtonComponet(
-                    onPressed: () => controller.startTimer(1),
+                    onPressed: () => controller.startTimer(1, 23),
                     difficulty: 'Expert',
                     eatTime: 1,
                     dietTime: 23,
@@ -70,20 +87,30 @@ class MainScreen extends GetView<MainController> {
               ),
               const SizedBox(height: 48),
               InkWell(
-                onTap: controller.pauseOrResumeTimer,
+                onTap: () {
+                  controller.pauseOrResumeTimer();
+                },
                 child: const CirCleComponent(
                   insideColor: Color.fromRGBO(255, 46, 99, 1),
                   outsideColor: Color.fromRGBO(234, 234, 234, 1),
                 ),
               ),
-              ElevatedButton(
-                onPressed: () {
-                  controller.startTimer1(3);
-                  // Get.to(const Main2Screen(
-                  //   dietTimeInSeconds: 3,
-                  // ));
-                },
-                child: const Text('test'),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      controller.startTimer1(180, 180);
+                    },
+                    child: const Text('test'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      controller.clearSavedData();
+                    },
+                    child: const Text('test'),
+                  ),
+                ],
               ),
             ],
           ),
