@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:onetouchtimer/core/component/circle_component.dart';
 import 'package:onetouchtimer/core/component/elevatedbutton_component.dart';
 import 'package:onetouchtimer/core/component/text_component.dart';
@@ -9,7 +10,7 @@ import 'package:onetouchtimer/presentation/diet/diet_controller.dart';
 class DietScreen extends GetView<DietController> {
   final int dietTimeInSeconds;
 
-  const DietScreen({required this.dietTimeInSeconds});
+  const DietScreen({super.key, required this.dietTimeInSeconds});
 
   @override
   Widget build(BuildContext context) {
@@ -89,6 +90,15 @@ class DietScreen extends GetView<DietController> {
                   outsideColor: Color.fromRGBO(234, 234, 234, 1),
                 ),
               ),
+              const SizedBox(
+                height: 48,
+              ),
+              if (controller.bannerAd != null) // Access the bannerAd property
+                SizedBox(
+                  width: controller.bannerAd!.size.width.toDouble(),
+                  height: controller.bannerAd!.size.height.toDouble(),
+                  child: AdWidget(ad: controller.bannerAd!),
+                )
             ],
           ),
         ),

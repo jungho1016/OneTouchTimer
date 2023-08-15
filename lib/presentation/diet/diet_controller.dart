@@ -1,8 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:onetouchtimer/core/component/circle_component.dart';
-import 'package:onetouchtimer/core/component/elevatedbutton_component.dart';
-import 'package:onetouchtimer/core/component/text_component.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:onetouchtimer/core/ad/adhelper.dart';
 import 'dart:async';
 
 import 'package:onetouchtimer/presentation/main/second_screen.dart';
@@ -11,11 +9,34 @@ class DietController extends GetxController {
   late Timer _timer;
   int dietTimeInSeconds = 0;
   bool isTimerPaused = false;
+  BannerAd? bannerAd;
 
   @override
   void onInit() {
     super.onInit();
     _timer = Timer.periodic(const Duration(seconds: 1), _timerCallback);
+    BannerAd(
+      adUnitId: AdHelper.bannerAdUnitId,
+      request: const AdRequest(),
+      size: AdSize.banner,
+      listener: BannerAdListener(
+        onAdLoaded: (ad) {
+          bannerAd = ad as BannerAd;
+          update();
+        },
+        onAdFailedToLoad: (ad, err) {
+          print('Failed to load a banner ad: ${err.message}');
+          ad.dispose();
+        },
+      ),
+    ).load();
+  }
+
+  @override
+  void onClose() {
+    _timer.cancel();
+    bannerAd?.dispose();
+    super.onClose();
   }
 
   void _timerCallback(Timer timer) {
@@ -26,12 +47,6 @@ class DietController extends GetxController {
       // Perform actions when the timer reaches 0
       // For example, navigate back or display a notification
     }
-  }
-
-  @override
-  void onClose() {
-    _timer.cancel();
-    super.onClose();
   }
 
   void startTimer(int seconds) {

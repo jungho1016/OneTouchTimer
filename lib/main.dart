@@ -1,17 +1,15 @@
-import 'dart:isolate';
-
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:onetouchtimer/core/alarm/alarm.dart';
 import 'package:onetouchtimer/presentation/diet/diet_controller.dart';
 import 'package:onetouchtimer/presentation/main/main_screen.dart';
 import 'presentation/main/main_controller.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  MobileAds.instance.initialize();
   await AndroidAlarmManager.initialize();
-
   runApp(const MyApp());
 }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:onetouchtimer/core/component/circle_component.dart';
 import 'package:onetouchtimer/core/component/elevatedbutton_component.dart';
 import 'package:onetouchtimer/core/component/text_component.dart';
@@ -9,12 +10,12 @@ class MainScreen extends GetView<MainController> with WidgetsBindingObserver {
   const MainScreen({super.key});
 
   void onInit() {
-    WidgetsBinding.instance?.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
     controller.restoreSavedData();
   }
 
   void onClose() {
-    WidgetsBinding.instance?.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
   }
 
   @override
@@ -39,26 +40,32 @@ class MainScreen extends GetView<MainController> with WidgetsBindingObserver {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  ElevatedButtonComponet(
-                    onPressed: () => controller.startTimer(12, 12),
-                    difficulty: 'Easy',
-                    eatTime: 12,
-                    dietTime: 12,
-                    color: const Color.fromRGBO(37, 42, 52, 1),
+                  Expanded(
+                    child: ElevatedButtonComponet(
+                      onPressed: () => controller.startTimer(12, 12),
+                      difficulty: 'Easy',
+                      eatTime: 12,
+                      dietTime: 12,
+                      color: const Color.fromRGBO(37, 42, 52, 1),
+                    ),
                   ),
-                  ElevatedButtonComponet(
-                    onPressed: () => controller.startTimer(8, 16),
-                    difficulty: 'Normal',
-                    eatTime: 8,
-                    dietTime: 16,
-                    color: const Color.fromRGBO(37, 42, 52, 1),
+                  Expanded(
+                    child: ElevatedButtonComponet(
+                      onPressed: () => controller.startTimer(8, 16),
+                      difficulty: 'Normal',
+                      eatTime: 8,
+                      dietTime: 16,
+                      color: const Color.fromRGBO(37, 42, 52, 1),
+                    ),
                   ),
-                  ElevatedButtonComponet(
-                    onPressed: () => controller.startTimer(1, 23),
-                    difficulty: 'Expert',
-                    eatTime: 1,
-                    dietTime: 23,
-                    color: const Color(0xFFFF2E63),
+                  Expanded(
+                    child: ElevatedButtonComponet(
+                      onPressed: () => controller.startTimer(1, 23),
+                      difficulty: 'Expert',
+                      eatTime: 1,
+                      dietTime: 23,
+                      color: const Color(0xFFFF2E63),
+                    ),
                   ),
                 ],
               ),
@@ -98,20 +105,30 @@ class MainScreen extends GetView<MainController> with WidgetsBindingObserver {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      controller.startTimer1(180, 180);
-                    },
-                    child: const Text('test'),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        controller.startTimer1(30, 30);
+                      },
+                      child: const Text('test'),
+                    ),
                   ),
-                  ElevatedButton(
-                    onPressed: () {
-                      controller.clearSavedData();
-                    },
-                    child: const Text('test'),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        controller.clearSavedData();
+                      },
+                      child: const Text('test'),
+                    ),
                   ),
                 ],
               ),
+              if (controller.bannerAd != null) // Access the bannerAd property
+                SizedBox(
+                  width: controller.bannerAd!.size.width.toDouble(),
+                  height: controller.bannerAd!.size.height.toDouble(),
+                  child: AdWidget(ad: controller.bannerAd!),
+                )
             ],
           ),
         ),

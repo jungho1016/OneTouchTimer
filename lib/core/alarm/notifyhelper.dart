@@ -8,7 +8,6 @@ import 'package:onetouchtimer/presentation/main/second_screen.dart';
 import 'package:timezone/standalone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
-import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 
 class NotifyHelper {
   static final StreamController<String> _streamController =
@@ -73,7 +72,6 @@ class NotifyHelper {
           'your channel name',
         ),
       ),
-      androidAllowWhileIdle: true,
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime,
     );

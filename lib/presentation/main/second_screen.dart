@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:onetouchtimer/core/alarm/alarm.dart';
+import 'package:onetouchtimer/core/alarm/notifyhelper.dart';
 
 class SecondScreen extends StatefulWidget {
   SecondScreen({Key? key, this.payload}) : super(key: key);
@@ -29,7 +29,7 @@ class _SecondScreenState extends State<SecondScreen> {
             notifyHelper.displayNotification(
                 title: '원터치 알람', body: 'test body', payload: 'test');
           },
-          child: Text('text')),
+          child: const Text('text')),
     );
   }
 }
