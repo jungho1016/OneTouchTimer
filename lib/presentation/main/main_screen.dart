@@ -11,7 +11,7 @@ class MainScreen extends GetView<MainController> with WidgetsBindingObserver {
 
   void onInit() {
     WidgetsBinding.instance.addObserver(this);
-    controller.restoreSavedData();
+    // controller.restoreSavedData();
   }
 
   void onClose() {
@@ -108,9 +108,9 @@ class MainScreen extends GetView<MainController> with WidgetsBindingObserver {
                   Expanded(
                     child: ElevatedButton(
                       onPressed: () {
-                        controller.startTimer1(30, 30);
+                        controller.startTimer1(15, 15);
                       },
-                      child: const Text('test'),
+                      child: const Text('15초 테스트'),
                     ),
                   ),
                   Expanded(
@@ -118,7 +118,7 @@ class MainScreen extends GetView<MainController> with WidgetsBindingObserver {
                       onPressed: () {
                         controller.clearSavedData();
                       },
-                      child: const Text('test'),
+                      child: const Text('데이터 초기화'),
                     ),
                   ),
                 ],

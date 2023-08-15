@@ -23,7 +23,7 @@ class MainController extends GetxController with WidgetsBindingObserver {
     super.onInit();
     _setupBackgroundAlarm();
     WidgetsBinding.instance.addObserver(this);
-    restoreSavedData();
+    // restoreSavedData();
 
     BannerAd(
       adUnitId: AdHelper.bannerAdUnitId,
@@ -47,7 +47,7 @@ class MainController extends GetxController with WidgetsBindingObserver {
     WidgetsBinding.instance.removeObserver(this);
     _backgroundAlarmSubscription?.value.cancel();
     _timer?.cancel();
-    bannerAd?.dispose();
+    // bannerAd?.dispose();
     super.onClose();
   }
 
@@ -67,7 +67,7 @@ class MainController extends GetxController with WidgetsBindingObserver {
       if (!isTimerPaused) {
         if (eatTimeInSeconds > 0) {
           eatTimeInSeconds--;
-          saveDataOnExit(); // 데이터 저장
+          // saveDataOnExit(); // 데이터 저장
         } else {
           timer.cancel();
           Get.to(() => DietScreen(
@@ -113,12 +113,12 @@ class MainController extends GetxController with WidgetsBindingObserver {
     eatTimeInSeconds = eatHours * 3600;
     dietTimeInSeconds = dietHours * 3600;
     isTimerPaused = false;
-    saveDataOnExit(); // 데이터 저장
+    // saveDataOnExit(); // 데이터 저장
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (!isTimerPaused) {
         if (eatTimeInSeconds > 0) {
           eatTimeInSeconds--;
-          saveDataOnExit();
+          // saveDataOnExit();
           update(); // 데이터 저장
         } else {
           timer.cancel();
@@ -129,10 +129,10 @@ class MainController extends GetxController with WidgetsBindingObserver {
               title: '원터치 알람', body: '식사 시간이 완료되었습니다.', payload: 'test');
           update();
         }
-        if (eatTimeInSeconds == 0) {
-          lastEatTimeInSeconds =
-              dietTimeInSeconds; // eatTimeInSeconds가 0이 되면 값을 저장
-        }
+        // if (eatTimeInSeconds == 0) {
+        //   lastEatTimeInSeconds =
+        //       dietTimeInSeconds; // eatTimeInSeconds가 0이 되면 값을 저장
+        // }
       }
     });
   }
@@ -150,7 +150,7 @@ class MainController extends GetxController with WidgetsBindingObserver {
       if (!isTimerPaused) {
         if (eatTimeInSeconds > 0) {
           eatTimeInSeconds--;
-          saveDataOnExit();
+          // saveDataOnExit();
           update(); // 데이터 저장
         } else {
           timer.cancel();
@@ -161,10 +161,10 @@ class MainController extends GetxController with WidgetsBindingObserver {
               title: '원터치 알람', body: '식사 시간이 완료되었습니다.', payload: 'test');
           update();
         }
-        if (eatTimeInSeconds == 0) {
-          lastEatTimeInSeconds =
-              dietTimeInSeconds; // eatTimeInSeconds가 0이 되면 값을 저장
-        }
+        // if (eatTimeInSeconds == 0) {
+        //   lastEatTimeInSeconds =
+        //       dietTimeInSeconds; // eatTimeInSeconds가 0이 되면 값을 저장
+        // }
       }
     });
   }
@@ -180,35 +180,35 @@ class MainController extends GetxController with WidgetsBindingObserver {
     update();
   }
 
-  Future<void> restoreSavedData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    dietTimeInSeconds = prefs.getInt('dietTimeInSeconds') ?? 0;
-    int savedDietTimeInSeconds = prefs.getInt('dietTimeInSeconds') ?? 0;
-    int savedEatTimeInSeconds = prefs.getInt('eatTimeInSeconds') ?? 0;
-    int saveTime =
-        prefs.getInt('saveTime') ?? DateTime.now().millisecondsSinceEpoch;
-    print(' saveTime : $saveTime ');
-    int nowInSeconds =
-        ((DateTime.now().millisecondsSinceEpoch - saveTime) / 1000).round();
-    eatTimeInSeconds = savedEatTimeInSeconds - nowInSeconds;
-
-    if (eatTimeInSeconds == 0) {
-      dietTimeInSeconds = savedDietTimeInSeconds - nowInSeconds;
-    }
-
-    print('nowInSeconds  : $nowInSeconds');
-    isTimerPaused = prefs.getBool('isTimerPaused') ?? false;
-
-    if (!isTimerPaused && (eatTimeInSeconds > 0 || dietTimeInSeconds > 0)) {
-      if (eatTimeInSeconds == 0) {
-        dietTimeInSeconds =
-            lastEatTimeInSeconds; // eatTimeInSeconds가 0이면 저장된 값을 할당
-      }
-      startTimer1(eatTimeInSeconds, dietTimeInSeconds);
-      update(); // 타이머 시작
-    }
-  }
+  // Future<void> restoreSavedData() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //
+  //   dietTimeInSeconds = prefs.getInt('dietTimeInSeconds') ?? 0;
+  //   int savedDietTimeInSeconds = prefs.getInt('dietTimeInSeconds') ?? 0;
+  //   int savedEatTimeInSeconds = prefs.getInt('eatTimeInSeconds') ?? 0;
+  //   int saveTime =
+  //       prefs.getInt('saveTime') ?? DateTime.now().millisecondsSinceEpoch;
+  //   print(' saveTime : $saveTime ');
+  //   int nowInSeconds =
+  //       ((DateTime.now().millisecondsSinceEpoch - saveTime) / 1000).round();
+  //   eatTimeInSeconds = savedEatTimeInSeconds - nowInSeconds;
+  //
+  //   if (eatTimeInSeconds == 0) {
+  //     dietTimeInSeconds = savedDietTimeInSeconds - nowInSeconds;
+  //   }
+  //
+  //   print('nowInSeconds  : $nowInSeconds');
+  //   isTimerPaused = prefs.getBool('isTimerPaused') ?? false;
+  //
+  //   if (!isTimerPaused && (eatTimeInSeconds > 0 || dietTimeInSeconds > 0)) {
+  //     if (eatTimeInSeconds == 0) {
+  //       dietTimeInSeconds =
+  //           lastEatTimeInSeconds; // eatTimeInSeconds가 0이면 저장된 값을 할당
+  //     }
+  //     startTimer1(eatTimeInSeconds, dietTimeInSeconds);
+  //     update(); // 타이머 시작
+  //   }
+  // }
 
   // 로직 짜기
 
