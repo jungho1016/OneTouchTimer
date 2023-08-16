@@ -63,8 +63,8 @@ class NotifyHelper {
 
     await flutterLocalNotificationsPlugin.zonedSchedule(
       0,
-      'Scheduled Title',
-      'This is a scheduled notification',
+      '일정된 제목',
+      '이것은 예약된 알림입니다.',
       scheduledTime,
       const NotificationDetails(
         android: AndroidNotificationDetails(

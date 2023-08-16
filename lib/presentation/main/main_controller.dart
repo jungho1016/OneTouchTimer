@@ -11,7 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class MainController extends GetxController with WidgetsBindingObserver {
   int eatTimeInSeconds = 0;
   int dietTimeInSeconds = 0;
-  int lastEatTimeInSeconds = 0;
+  // int lastEatTimeInSeconds = 0;
   Timer? _timer;
   bool isTimerPaused = false;
   NotifyHelper notifyHelper = NotifyHelper();
@@ -86,6 +86,7 @@ class MainController extends GetxController with WidgetsBindingObserver {
       const Duration(seconds: 10), // 1분마다 실행 (원하는 주기로 설정)
       1, // 아무 정수값
       _backgroundAlarmCallback,
+      // startAt: ,
       wakeup: true,
       rescheduleOnReboot: true,
     );
